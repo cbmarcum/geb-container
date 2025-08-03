@@ -9,6 +9,9 @@ guava = "33.4.5-jre"
 junit = "4.13.2"
 # spock-core = "2.2-groovy-3.0"
 geb-spock = "7.0"
+testcontainers = "1.21.3"
+selenium = "4.33.0"
+remote-driver = "3.141.59"
 
 [libraries]
 commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math3" }
@@ -18,3 +21,7 @@ guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { module = "junit:junit", version.ref = "junit" }
 # spock-core = { module = "org.spockframework:spock-core", version.ref = "spock-core" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb-spock" }
+testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref = "testcontainers" }
+selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
+selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "remote-driver" }
+selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }

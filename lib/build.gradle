@@ -15,6 +15,9 @@ plugins {
     id 'java-library'
 }
 
+archivesBaseName = 'geb-container'
+version = '0.0.1'
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
@@ -33,6 +36,26 @@ dependencies {
     implementation libs.geb.spock
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // until fixed for versions.toml
+    // api 'org.gebish:geb-spock'
+    // api project(':grails-testing-support-core')
+    // api project(':grails-datamapping-core')
+
+    api libs.testcontainers.selenium
+    api libs.selenium.chrome.driver
+    api libs.selenium.remote.driver
+
+    implementation libs.selenium.support
+
+    implementation "org.slf4j:slf4j-api:2.0.17"
+    implementation "org.slf4j:slf4j-simple:2.0.17"
+
+    // Added to be able to resolve the geb version from the BOM in the resolveVersions task
+    // compileOnly 'org.gebish:geb-spock'
+
+
+
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -40,6 +63,15 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
+}
+
+compileJava {
+    options.release = 17
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 tasks.named('test') {
