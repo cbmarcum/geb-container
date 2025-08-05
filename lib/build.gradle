@@ -13,10 +13,14 @@ plugins {
 
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+
+    id 'maven-publish'
+    id 'signing'
 }
 
+version = '0.0.1-SNAPSHOT'
+group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
-version = '0.0.1'
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -78,3 +82,75 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+// TODO: add publishing and signing
+// guide: https://docs.gradle.org/current/userguide/publishing_setup.html
+// ref: https://github.com/cbmarcum/mybusiness/blob/master/build.gradle
+
+publishing {
+    publications {
+        myLibrary(MavenPublication) {
+            artifactId = 'geb-container'
+            from components.java
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+
+            pom {
+                name = 'Geb Container API'
+                packaging = 'jar'
+                description = 'A library for using Testcontainers with Apache Geb'
+                url = 'http://codebuilders.net'
+                inceptionYear = '2016'
+
+                scm {
+                    url = 'https://github.com/cbmarcum/geb-container'
+                    developerConnection = 'https://github.com/cbmarcum/geb-container'
+                    connection = 'https://github.com/cbmarcum/geb-container'
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache Software License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        name = 'Carl Marcum'
+                        email = 'carl.marcum@codebuilders.net'
+                        url = 'https://codebuilders.net'
+                        organization = 'Code Builders, LLC'
+                        organizationUrl = 'https://codebuilders.net'
+
+                    }
+                }
+            } // end pom
+
+
+
+        } // myLibrary
+    } // end publications
+
+    repositories {
+        maven {
+            name = 'myRepo'
+            url = layout.buildDirectory.dir("repo")
+        }
+
+    } // end repositories
+
+} // end publishing
+
+signing {
+    sign publishing.publications.myLibrary
+}
+

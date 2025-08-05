@@ -19,7 +19,6 @@
 package grails.plugin.geb
 
 import grails.plugin.geb.support.LocalhostDownloadSupport
-// import grails.testing.mixin.integration.Integration
 import groovy.transform.CompileStatic
 import groovy.transform.TailRecursive
 import groovy.util.logging.Slf4j
@@ -69,7 +68,7 @@ class GrailsContainerGebExtension implements IGlobalExtension {
 
     @Override
     void visitSpec(SpecInfo spec) {
-        if (isContainerGebSpec(spec) ) { // removed && validateContainerGebSpec(spec) - cbmarcum
+        if (isContainerGebSpec(spec) ) {
             // Do not allow parallel execution since there's only 1 set of containers in testcontainers
             spec.addExclusiveResource(exclusiveResource)
 
@@ -133,16 +132,6 @@ class GrailsContainerGebExtension implements IGlobalExtension {
         }
         return false
     }
-
-    /*
-    private static boolean validateContainerGebSpec(SpecInfo specInfo) {
-        if (!specInfo.annotations.find { it.annotationType() == Integration }) {
-            throw new IllegalArgumentException('ContainerGebSpec classes must be annotated with @Integration')
-        }
-
-        return true
-    }
-     */
 
     private static void addGebExtensionOnFailureReporter(SpecInfo spec) {
         List<MethodInfo> methods = spec.allFeatures*.featureMethod + spec.allFixtureMethods.toList()
