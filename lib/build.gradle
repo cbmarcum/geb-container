@@ -37,7 +37,7 @@ dependencies {
     // Use the awesome Spock testing and specification framework even with Java
     // testImplementation libs.spock.core
     // testImplementation libs.junit
-    implementation libs.geb.spock
+    api libs.geb.spock
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -48,6 +48,8 @@ dependencies {
 
     api libs.testcontainers.selenium
     api libs.selenium.chrome.driver
+    api libs.selenium.firefox.driver
+    api libs.selenium.edge.driver
     api libs.selenium.remote.driver
 
     implementation libs.selenium.support

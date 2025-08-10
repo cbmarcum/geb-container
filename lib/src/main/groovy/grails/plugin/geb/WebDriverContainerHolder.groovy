@@ -30,6 +30,8 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.firefox.FirefoxOptions
+import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.spockframework.runtime.extension.IMethodInvocation
 import org.spockframework.runtime.model.SpecInfo
@@ -116,19 +118,38 @@ class WebDriverContainerHolder {
                 "profile.password_manager_leak_detection": false
         ]
 
-        ChromeOptions chromeOptions = new ChromeOptions()
-        // TODO: guest would be preferred, but this causes issues with downloads
-        // see https://issues.chromium.org/issues/42323769
-        // chromeOptions.addArguments("--guest")
-        chromeOptions.setExperimentalOption("prefs", prefs)
-
         currentContainer.tap {
             withEnv('SE_ENABLE_TRACING', grailsGebSettings.tracingEnabled)
             withAccessToHost(true)
             withImagePullPolicy(PullPolicy.ageBased(Duration.of(1, ChronoUnit.DAYS)))
-            withCapabilities(chromeOptions)
-            start()
         }
+
+        ChromeOptions chromeOptions
+        FirefoxOptions firefoxOptions
+        EdgeOptions edgeOptions
+
+        switch (grailsGebSettings.browserType) {
+            case 'chrome':
+                chromeOptions = new ChromeOptions()
+                // TODO: guest would be preferred, but this causes issues with downloads
+                // see https://issues.chromium.org/issues/42323769
+                // chromeOptions.addArguments("--guest")
+                chromeOptions.setExperimentalOption("prefs", prefs)
+                currentContainer.withCapabilities(chromeOptions)
+                break
+
+            case 'firefox':
+                firefoxOptions = new FirefoxOptions()
+                currentContainer.withCapabilities(firefoxOptions)
+                break
+
+            case 'edge':
+                edgeOptions = new EdgeOptions()
+                currentContainer.withCapabilities(edgeOptions)
+        }
+
+        currentContainer.start()
+
         if (hostnameChanged) {
             currentContainer.execInContainer('/bin/sh', '-c', "echo '$hostIp\t${currentConfiguration.hostName}' | sudo tee -a /etc/hosts")
         }
@@ -144,7 +165,21 @@ class WebDriverContainerHolder {
 
         currentBrowser = new Browser(new Configuration(configObject, new Properties(), null, null))
 
-        WebDriver driver = new RemoteWebDriver(currentContainer.seleniumAddress, chromeOptions)
+        WebDriver driver
+
+        switch (grailsGebSettings.browserType) {
+            case 'chrome':
+                driver = new RemoteWebDriver(currentContainer.seleniumAddress, chromeOptions)
+                break
+
+            case 'firefox':
+                driver = new RemoteWebDriver(currentContainer.seleniumAddress, firefoxOptions)
+                break
+
+            case 'edge':
+                driver = new RemoteWebDriver(currentContainer.seleniumAddress, edgeOptions)
+        }
+
         ContainerFileDetector fileDetector = ServiceRegistry.getInstance(ContainerFileDetector, DefaultContainerFileDetector)
         ((RemoteWebDriver) driver).setFileDetector(fileDetector)
         driver.manage().timeouts().with {
