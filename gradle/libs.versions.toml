@@ -23,5 +23,7 @@ junit = { module = "junit:junit", version.ref = "junit" }
 geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb-spock" }
 testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref = "testcontainers" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
+selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
+selenium-edge-driver = { module = "org.seleniumhq.selenium:selenium-edge-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "remote-driver" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }

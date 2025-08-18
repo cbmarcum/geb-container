@@ -18,6 +18,7 @@
  */
 package grails.plugin.geb
 
+import grails.plugin.geb.support.BrowserType
 import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 import groovy.util.logging.Slf4j
@@ -43,10 +44,12 @@ class GrailsGebSettings {
     private static int DEFAULT_TIMEOUT_IMPLICITLY_WAIT = 0
     private static int DEFAULT_TIMEOUT_PAGE_LOAD = 300
     private static int DEFAULT_TIMEOUT_SCRIPT = 30
+    private static String DEFAULT_BROWSER_TYPE = BrowserType.chrome
 
     String tracingEnabled
     String recordingDirectoryName
     String reportingDirectoryName
+    String browserType
     VncRecordingMode recordingMode
     VncRecordingFormat recordingFormat
     LocalDateTime startTime
@@ -58,6 +61,7 @@ class GrailsGebSettings {
         tracingEnabled = System.getProperty('grails.geb.tracing.enabled', 'false')
         recordingDirectoryName = System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings')
         reportingDirectoryName = System.getProperty('grails.geb.reporting.directory', 'build/gebContainer/reports')
+        browserType = System.getProperty('grails.geb.browser.type', DEFAULT_BROWSER_TYPE)
         recordingMode = VncRecordingMode.valueOf(
                 System.getProperty('grails.geb.recording.mode', DEFAULT_RECORDING_MODE.name())
         )
