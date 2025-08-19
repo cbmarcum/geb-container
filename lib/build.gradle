@@ -18,7 +18,7 @@ plugins {
     id 'signing'
 }
 
-version = '0.0.1-SNAPSHOT'
+version = '0.1.0'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
@@ -109,7 +109,7 @@ publishing {
                 packaging = 'jar'
                 description = 'A library for using Testcontainers with Apache Geb'
                 url = 'http://codebuilders.net'
-                inceptionYear = '2016'
+                inceptionYear = '2025'
 
                 scm {
                     url = 'https://github.com/cbmarcum/geb-container'
