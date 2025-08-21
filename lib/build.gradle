@@ -18,13 +18,14 @@ plugins {
     id 'signing'
 }
 
-version = '0.1.0'
+version = '0.2.0-SNAPSHOT' // while using local geb 8 snapshot
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+    mavenLocal() // temp for geb 8 snapshot
 }
 
 /* see gradle/<module>.versions.toml for coordinates and versions
