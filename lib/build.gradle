@@ -27,6 +27,29 @@ repositories {
     mavenCentral()
 }
 
+// begin section for geb-container
+sourceSets {
+    integrationTest {
+        groovy {
+            srcDirs = ['src/integration-test/groovy']
+        }
+        resources {
+            srcDirs = ['src/integration-test/resources']
+        }
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
+}
+// end section for geb-container
+
+
+
+
 /* see gradle/<module>.versions.toml for coordinates and versions
    implementation is used internally, and not exposed to consumers on their own compile classpath.
    api is exported to consumers, that is to say found on their compile classpath.
@@ -58,9 +81,11 @@ dependencies {
     implementation "org.slf4j:slf4j-simple:2.0.17"
 
     // Added to be able to resolve the geb version from the BOM in the resolveVersions task
-    // compileOnly 'org.gebish:geb-spock'
+    compileOnly 'org.gebish:geb-spock'
 
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
 
+    integrationTestRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
 
 }
 
@@ -80,8 +105,27 @@ java {
     withSourcesJar()
 }
 
-tasks.named('test') {
-    // Use JUnit Platform for unit tests.
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+
+    testLogging {
+        events 'passed'
+    }
+
+    // systemProperty('geb.env', System.getProperty('geb.env'))
+    systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
+    systemProperty('grails.geb.browser.type', 'firefox') // also chrome and edge
+    // systemProperty('grails.geb.recording.restartPerTest', 'false') // makes all recording the same
+}
+
+check.dependsOn integrationTest
+
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
