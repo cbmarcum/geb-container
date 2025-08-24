@@ -53,7 +53,7 @@ trait PageDelegate implements Navigable, AlertAndConfirmSupport, WaitingSupport,
     private final TextMatchingSupport textMatchingSupport = new TextMatchingSupport()
 
     Page getPage() {
-        testManager.browser.page
+        ContainerGebSpec.testManager.browser.page
     }
 
     void to(Map params, UrlFragment fragment = null, Object[] args) {

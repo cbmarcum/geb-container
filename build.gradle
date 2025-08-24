@@ -8,6 +8,7 @@
  */
 
 plugins {
+
     // Apply the groovy Plugin to add support for Groovy.
     id 'groovy'
 
@@ -16,11 +17,21 @@ plugins {
 
     id 'maven-publish'
     id 'signing'
+    // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
+    // https://github.com/gradle-nexus/publish-plugin
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+
+
 }
 
 version = '0.2.0'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
+
+ext {
+    isReleaseVersion = !version.endsWith("SNAPSHOT") // used to not pgp sign snapshots
+    // isReleaseVersion = false  // to force not signing
+}
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -95,11 +106,15 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
-/*
-compileJava {
-    options.release = 17
+
+groovydoc {
+    docTitle = "Geb Container API"
+    header = "Code Builders, LLC" // doesn't seem to work
+    footer = "Generated documentation ${version}"
+    windowTitle = docTitle
+    use = true // create class and package usage pages
 }
-*/
+
 java {
     withJavadocJar()
     withSourcesJar()
@@ -200,3 +215,21 @@ signing {
     sign publishing.publications.myLibrary
 }
 
+// https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
+// https://github.com/gradle-nexus/publish-plugin
+nexusPublishing {
+    repositories {
+        sonatype {
+            def ossUser = System.getenv("SONATYPE_USERNAME") ?: project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : ''
+            def ossPass = System.getenv("SONATYPE_PASSWORD") ?: project.hasProperty("sonatypeOssPassword") ? project.sonatypeOssPassword : ''
+            def ossStagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: project.hasProperty("sonatypeOssStagingProfileId") ? project.sonatypeOssStagingProfileId : ''
+            // nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
+            // snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+            username = ossUser
+            password = ossPass
+            stagingProfileId = ossStagingProfileId
+        }
+    }
+}

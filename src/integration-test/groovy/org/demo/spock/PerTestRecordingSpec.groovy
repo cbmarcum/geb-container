@@ -26,7 +26,7 @@ import spock.lang.Shared
 class PerTestRecordingSpec extends ContainerGebSpec {
 
     @Shared
-    serverPort = 8080
+    serverPort = 8080 // TODO: this needs to be a configuration
 
     void 'first test'() {
         when: 'visiting the grails home page'
@@ -90,5 +90,9 @@ class PerTestRecordingSpec extends ContainerGebSpec {
         // Files should have different sizes (allowing for small variations due to timing)
         long sizeDifference = Math.abs(lastFile.length() - secondLastFile.length())
         sizeDifference > 1000 // Expect at least 1KB difference
+    }
+
+    def cleanup() {
+        sleep(1000) // give the last video time to copy
     }
 }

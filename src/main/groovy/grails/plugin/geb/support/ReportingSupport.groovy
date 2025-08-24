@@ -16,38 +16,35 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package grails.plugin.geb.support.delegate
+package grails.plugin.geb.support
 
+import geb.report.CompositeReporter
+import geb.report.PageSourceReporter
+import geb.report.Reporter
+import geb.report.ScreenshotReporter
 import grails.plugin.geb.ContainerGebSpec
 import groovy.transform.CompileStatic
 import groovy.transform.SelfType
 
 /**
- * Handles delegation to select methods of the driver instance for end user convenience.
+ * Enables reporting support for ContainerGebSpec.
  *
+ * @author James Daugherty
  * @author Mattias Reichel
  * @since 4.2
  */
 @CompileStatic
 @SelfType(ContainerGebSpec)
-trait DriverDelegate {
+trait ReportingSupport {
 
-    /**
-     * Get the source of the last loaded page. If the page has been modified after loading (for
-     * example, by Javascript) there is no guarantee that the returned text is that of the modified
-     * page. Please consult the documentation of the particular driver being used to determine whether
-     * the returned text reflects the current state of the page or the text last sent by the web
-     * server. The page source returned is a representation of the underlying DOM: do not expect it to
-     * be formatted or escaped in the same way as the response sent from the web server. Think of it
-     * as an artist's impression.
-     *
-     * <p>See <a href="https://w3c.github.io/webdriver/#get-page-source">W3C WebDriver
-     * specification</a> for more details.
-     *
-     * @return The source of the current page
-     */
-    String getPageSource() {
-        testManager.browser.driver.pageSource
+    void report(String message) {
+        ContainerGebSpec.testManager.report(message)
     }
 
+    /**
+     * The reporter that Geb should use when reporting is enabled.
+     */
+    Reporter createReporter() {
+        return new CompositeReporter(new PageSourceReporter(), new ScreenshotReporter())
+    }
 }

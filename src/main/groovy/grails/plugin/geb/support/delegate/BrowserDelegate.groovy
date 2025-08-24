@@ -50,7 +50,7 @@ trait BrowserDelegate {
      * Accessor to the Geb {@link geb.Browser} instance.
      */
     Browser getBrowser() {
-        testManager.browser
+        ContainerGebSpec.testManager.browser
     }
 
     /**
