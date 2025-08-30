@@ -30,7 +30,7 @@ plugins {
 
 }
 
-version = '0.2.0'
+version = '0.3.0-SNAPSHOT'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
@@ -126,6 +126,10 @@ tasks.register('integrationTest', Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
     shouldRunAfter test
 
+
+}
+
+tasks.named("integrationTest") {
     testLogging {
         events 'passed', 'skipped', 'failed'
     }
@@ -134,6 +138,19 @@ tasks.register('integrationTest', Test) {
     systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
     systemProperty('grails.geb.browser.type', 'firefox') // also chrome and edge
     // systemProperty('grails.geb.recording.restartPerTest', 'false') // makes all recording the same
+
+    def baseDir = file(System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings'))
+    doLast {
+        // Delete all but the two most recent recording directories to save space
+        // def baseDir = file(System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings'))
+        if (!baseDir.isDirectory()) return
+        def dirs = (baseDir.listFiles() ?: [])
+                .findAll { it.directory && it.name ==~ /^\d{8}_\d{6}$/ }
+                .sort { it.name }
+        if (dirs.size() > 2) {
+            delete(dirs.dropRight(2)) // keep the two most recent
+        }
+    }
 }
 
 check.dependsOn integrationTest
@@ -142,7 +159,7 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
 }
 
-// TODO: add publishing and signing
+// publishing and signing
 // guide: https://docs.gradle.org/current/userguide/publishing_setup.html
 // ref: https://github.com/cbmarcum/mybusiness/blob/master/build.gradle
 
@@ -192,12 +209,9 @@ publishing {
 
                     }
                 }
-            } // end pom
-
-
-
-        } // myLibrary
-    } // end publications
+            }
+        }
+    }
 
     repositories {
         maven {
@@ -205,9 +219,9 @@ publishing {
             url = layout.buildDirectory.dir("repo")
         }
 
-    } // end repositories
+    }
 
-} // end publishing
+}
 
 signing {
     sign publishing.publications.myLibrary
@@ -215,7 +229,7 @@ signing {
 
 // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
 // https://github.com/gradle-nexus/publish-plugin
-
+// currently not working
 // see https://github.com/gradle-nexus/publish-plugin/issues/221
 nexusPublishing {
     repositories {

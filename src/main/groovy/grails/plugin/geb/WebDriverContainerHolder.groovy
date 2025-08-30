@@ -42,7 +42,6 @@ import org.testcontainers.containers.VncRecordingContainer
 import org.testcontainers.images.PullPolicy
 
 import java.lang.reflect.Field
-
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 import java.util.function.Supplier
@@ -307,7 +306,7 @@ class WebDriverContainerHolder {
 
             VncRecordingContainer vncContainer = vncRecordingContainerField.get(currentContainer) as VncRecordingContainer
 
-            if (vncContainer != null) {
+            if (vncContainer) {
                 // Stop the current VNC recording container
                 vncContainer.stop()
                 // Create and start a new VNC recording container for the next test
