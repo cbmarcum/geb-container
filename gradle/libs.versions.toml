@@ -10,7 +10,7 @@ junit = "4.13.2"
 # spock-core = "2.2-groovy-3.0"
 geb-spock = "7.0"
 testcontainers = "1.21.3"
-selenium = "4.33.0"
+selenium = "4.34.0" # can't use 4.35.0 yet
 remote-driver = "3.141.59"
 
 [libraries]
