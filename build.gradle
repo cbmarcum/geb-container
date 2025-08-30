@@ -139,23 +139,12 @@ tasks.named("integrationTest") {
     systemProperty('grails.geb.browser.type', 'firefox') // also chrome and edge
     // systemProperty('grails.geb.recording.restartPerTest', 'false') // makes all recording the same
 
-    def baseDir = file(System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings'))
-    doLast {
-        // Delete all but the two most recent recording directories to save space
-        // def baseDir = file(System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings'))
-        if (!baseDir.isDirectory()) return
-        def dirs = (baseDir.listFiles() ?: [])
-                .findAll { it.directory && it.name ==~ /^\d{8}_\d{6}$/ }
-                .sort { it.name }
-        if (dirs.size() > 2) {
-            delete(dirs.dropRight(2)) // keep the two most recent
-        }
-    }
 }
 
 check.dependsOn integrationTest
 
 tasks.withType(Test).configureEach {
+    outputs.upToDateWhen { false } // always run tests
     useJUnitPlatform()
 }
 
