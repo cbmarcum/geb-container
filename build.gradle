@@ -79,9 +79,6 @@ configurations {
 dependencies {
     implementation libs.groovy
 
-    // Use the awesome Spock testing and specification framework even with Java
-    // testImplementation libs.spock.core
-    // testImplementation libs.junit
     api libs.geb.spock
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
