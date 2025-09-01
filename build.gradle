@@ -38,13 +38,13 @@ plugins {
 
 }
 
-version = '0.4.0-SNAPSHOT'
+version = '0.4.0-M1'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT") // used to not pgp sign snapshots
-    // isReleaseVersion = false  // to force not signing
+    // isReleaseVersion = true  // to force signing
 
     // The drivers we want to use in containers
     // see https://github.com/SeleniumHQ/docker-selenium
