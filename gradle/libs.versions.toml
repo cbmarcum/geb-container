@@ -21,5 +21,6 @@ testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref 
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-edge-driver = { module = "org.seleniumhq.selenium:selenium-edge-driver", version.ref = "selenium" }
+selenium-chromium-driver = { module = "org.seleniumhq.selenium:selenium-chromium-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "remote-driver" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }

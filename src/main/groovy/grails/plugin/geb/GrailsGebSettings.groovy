@@ -41,16 +41,16 @@ class GrailsGebSettings {
 
     private static VncRecordingMode DEFAULT_RECORDING_MODE = VncRecordingMode.SKIP
     private static VncRecordingFormat DEFAULT_RECORDING_FORMAT = VncRecordingFormat.MP4
-    private static int DEFAULT_TIMEOUT_IMPLICITLY_WAIT = 0
-    private static int DEFAULT_TIMEOUT_PAGE_LOAD = 300
-    private static int DEFAULT_TIMEOUT_SCRIPT = 30
-    private static String DEFAULT_BROWSER_TYPE = BrowserType.chrome
+    public static int DEFAULT_TIMEOUT_IMPLICITLY_WAIT = 0
+    public static int DEFAULT_TIMEOUT_PAGE_LOAD = 300
+    public static int DEFAULT_TIMEOUT_SCRIPT = 30
+    // private static String DEFAULT_BROWSER_TYPE = BrowserType.chrome
 
     String tracingEnabled
     String recordingDirectoryName
     String reportingDirectoryName
     String browserType
-    boolean recordingRestartPerTest
+    boolean restartRecordingContainerPerTest
     VncRecordingMode recordingMode
     VncRecordingFormat recordingFormat
     LocalDateTime startTime
@@ -62,14 +62,15 @@ class GrailsGebSettings {
         tracingEnabled = System.getProperty('grails.geb.tracing.enabled', 'false')
         recordingDirectoryName = System.getProperty('grails.geb.recording.directory', 'build/gebContainer/recordings')
         reportingDirectoryName = System.getProperty('grails.geb.reporting.directory', 'build/gebContainer/reports')
-        browserType = System.getProperty('grails.geb.browser.type', DEFAULT_BROWSER_TYPE)
+        // browserType = System.getProperty('grails.geb.browser.type', DEFAULT_BROWSER_TYPE)
+        // browserType = System.getProperty('geb.env', DEFAULT_BROWSER_TYPE)
         recordingMode = VncRecordingMode.valueOf(
                 System.getProperty('grails.geb.recording.mode', DEFAULT_RECORDING_MODE.name())
         )
         recordingFormat = VncRecordingFormat.valueOf(
                 System.getProperty('grails.geb.recording.format', DEFAULT_RECORDING_FORMAT.name())
         )
-        recordingRestartPerTest = Boolean.parseBoolean(System.getProperty('grails.geb.recording.restartPerTest', 'true'))
+        restartRecordingContainerPerTest = Boolean.parseBoolean(System.getProperty('grails.geb.recording.restartRecordingContainerPerTest', 'true'))
         implicitlyWait = getIntProperty('grails.geb.timeouts.implicitlyWait', DEFAULT_TIMEOUT_IMPLICITLY_WAIT)
         pageLoadTimeout = getIntProperty('grails.geb.timeouts.pageLoad', DEFAULT_TIMEOUT_PAGE_LOAD)
         scriptTimeout = getIntProperty('grails.geb.timeouts.script', DEFAULT_TIMEOUT_SCRIPT)

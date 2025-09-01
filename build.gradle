@@ -38,13 +38,19 @@ plugins {
 
 }
 
-version = '0.3.0'
+version = '0.4.0-SNAPSHOT'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT") // used to not pgp sign snapshots
     // isReleaseVersion = false  // to force not signing
+
+    // The drivers we want to use in containers
+    // see https://github.com/SeleniumHQ/docker-selenium
+    // for browsers per platform
+    // drivers = ["firefox", "chrome", "edge"] // no safari container
+    drivers = ["firefox"]
 }
 
 repositories {
@@ -87,6 +93,7 @@ dependencies {
     api libs.selenium.chrome.driver
     api libs.selenium.firefox.driver
     api libs.selenium.edge.driver
+    api libs.selenium.chromium.driver
     api libs.selenium.remote.driver
 
     implementation libs.selenium.support
@@ -139,11 +146,33 @@ tasks.named("integrationTest") {
         events 'passed', 'skipped', 'failed'
     }
 
-    // systemProperty('geb.env', System.getProperty('geb.env'))
+    systemProperty('geb.env', System.getProperty('geb.env'))
     systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
     systemProperty('grails.geb.browser.type', 'firefox') // also chrome and edge
     // systemProperty('grails.geb.recording.restartPerTest', 'false') // makes all recording the same
 
+}
+
+drivers.each { driver ->
+    task "${driver}Test"(type: Test) {
+        group JavaBasePlugin.VERIFICATION_GROUP
+
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
+
+        testLogging {
+            events 'passed', 'skipped', 'failed'
+        }
+
+        systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
+        systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
+        systemProperty "geb.env", driver
+    }
+}
+
+integrationTest {
+    dependsOn drivers.collect { tasks["${it}Test"] }
+    enabled = false
 }
 
 check.dependsOn integrationTest
