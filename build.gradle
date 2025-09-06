@@ -38,7 +38,7 @@ plugins {
 
 }
 
-version = '0.4.0-M1'
+version = '0.4.0'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
