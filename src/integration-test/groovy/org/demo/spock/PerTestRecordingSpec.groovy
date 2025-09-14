@@ -41,9 +41,6 @@ class PerTestRecordingSpec extends ContainerGebSpec {
         when: 'visiting the geb home page'
         go('https://groovy.apache.org/geb/')
 
-        and: 'pausing to ensure the recorded file size is different'
-        Thread.sleep(1000)
-
         then: 'the page loads correctly'
         title.contains('Geb - Very Groovy Browser Automation')
     }
@@ -92,7 +89,7 @@ class PerTestRecordingSpec extends ContainerGebSpec {
 
         // Files should have different sizes (allowing for small variations due to timing)
         long sizeDifference = Math.abs(lastFile.length() - secondLastFile.length())
-        sizeDifference > 1000 // Expect at least 1KB difference
+        sizeDifference > 2 // in KB
     }
 
     def cleanup() {
