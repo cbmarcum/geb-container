@@ -45,8 +45,8 @@ class GebConfigSpec extends ContainerGebSpec {
         then: 'our custom capability set in GebConfig is available'
         capabilities.getCapability('grails:gebConfigUsed') == true
 
-        and: 'the driver should have Firefox-specific capabilities'
-        capabilities.browserName == 'firefox'
+        and: 'the driver should use the browser from GebConfig.groovy'
+        capabilities.browserName == System.getProperty('geb.env')
 
         when: 'navigating to a page'
         go('https://grails.apache.org/')
@@ -65,8 +65,8 @@ class GebConfigSpec extends ContainerGebSpec {
         then: 'our custom capability set in GebConfig is available'
         capabilities.getCapability('grails:gebConfigUsed') == true
 
-        and: 'the driver should have Firefox-specific capabilities'
-        capabilities.browserName == 'firefox'
+        and: 'the driver should use the browser from GebConfig.groovy'
+        capabilities.browserName == System.getProperty('geb.env')
 
         when: 'navigating to a page'
         go('https://grails.apache.org/')
