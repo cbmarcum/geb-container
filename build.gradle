@@ -50,7 +50,7 @@ ext {
     // see https://github.com/SeleniumHQ/docker-selenium
     // for browsers per platform
     // drivers = ["firefox", "chrome", "edge"] // no safari container
-    drivers = ["firefox"]
+    drivers = ["firefox", "chrome"]
 }
 
 repositories {
@@ -148,13 +148,13 @@ tasks.named("integrationTest") {
 
     systemProperty('geb.env', System.getProperty('geb.env'))
     systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
-    systemProperty('grails.geb.browser.type', 'firefox') // also chrome and edge
     // systemProperty('grails.geb.recording.restartPerTest', 'false') // makes all recording the same
 
 }
 
-drivers.each { driver ->
-    task "${driver}Test"(type: Test) {
+drivers.eachWithIndex { driver, index ->
+
+    tasks.register("${driver}Test", Test) {
         group JavaBasePlugin.VERIFICATION_GROUP
 
         testClassesDirs = sourceSets.integrationTest.output.classesDirs
@@ -167,6 +167,11 @@ drivers.each { driver ->
         systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
         systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
         systemProperty "geb.env", driver
+
+        if (index > 0) {
+            dependsOn "${drivers[index-1]}Test"
+        }
+
     }
 }
 
