@@ -22,7 +22,6 @@ package org.demo.spock
 import org.openqa.selenium.remote.RemoteWebDriver
 
 import grails.plugin.geb.ContainerGebSpec
-import spock.lang.Shared
 import spock.lang.Stepwise
 
 /**
@@ -30,10 +29,7 @@ import spock.lang.Stepwise
  * is being used instead of the default WebDriverContainerHolder configuration.
  */
 @Stepwise
-class GebConfigSpec extends ContainerGebSpec {
-
-    @Shared
-    serverPort = 8080 // TODO: this needs to be a configuration
+class GebDriverConfigSpec extends ContainerGebSpec {
 
     void 'the first test should use custom RemoteWebDriver from GebConfig.groovy'() {
         expect: 'the driver to be a RemoteWebDriver'

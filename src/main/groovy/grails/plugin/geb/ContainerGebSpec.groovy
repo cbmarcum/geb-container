@@ -35,9 +35,6 @@ import spock.lang.Specification
  * <p>Prerequisites:
  * <ul>
  *   <li>
- *       The test class must be annotated with {@link grails.testing.mixin.integration.Integration @Integration}.
- *   </li>
- *   <li>
  *       A <a href="https://java.testcontainers.org/supported_docker_environment/">compatible container runtime</a>
  *       (e.g., Docker) must be available for Testcontainers to utilize.
  *   </li>

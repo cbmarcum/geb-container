@@ -28,6 +28,9 @@ import geb.report.ReportingListener
 
 // Configuration for container-based Geb testing
 // This driver configuration will be used by WebDriverContainerHolder
+
+hostPort = 8090
+
 environments {
 
     // run via “./gradlew firefoxTest”

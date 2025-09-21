@@ -26,8 +26,8 @@ import spock.lang.Stepwise
 @Stepwise // execute feature methods in declared order
 class PerTestRecordingSpec extends ContainerGebSpec {
 
-    @Shared
-    serverPort = 8080 // TODO: this needs to be a configuration
+    // @Shared
+    // serverPort = 8080 // TODO: this needs to be a configuration
 
     void '(setup) running a test to create a recording'() {
         when: 'visiting the grails home page'
