@@ -27,7 +27,7 @@ class TestFileServer {
         def addr = new InetSocketAddress(port)
 
         // Use JDK's built-in SimpleFileServer to serve the static content
-        server = SimpleFileServer.createFileServer(addr, staticDirPath, OutputLevel.NONE)
+        server = SimpleFileServer.createFileServer(addr, staticDirPath, OutputLevel.INFO)
         server.start()
         println "TestFileServer started on port 8080"
     }
