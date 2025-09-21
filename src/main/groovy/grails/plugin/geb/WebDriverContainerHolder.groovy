@@ -18,10 +18,8 @@
  */
 package grails.plugin.geb
 
-import org.openqa.selenium.chromium.ChromiumOptions
 import org.openqa.selenium.edge.EdgeOptions
 import org.openqa.selenium.firefox.FirefoxOptions
-import org.openqa.selenium.remote.CapabilityType
 
 import java.lang.reflect.Field
 import java.time.Duration
@@ -95,12 +93,31 @@ class WebDriverContainerHolder {
         specConfiguration == currentConfiguration && grailsGebSettings.recordingMode == BrowserWebDriverContainer.VncRecordingMode.SKIP
     }
 
+    /**
+     * Returns a host port to use for the container in this order:
+     * Class field 'hostPort' if found in the invocation (Spec).
+     * A 'hostPort' property in the GebConfig configuration.
+     * @param invocation
+     * @return
+     */
     private static int getPort(IMethodInvocation invocation) {
+        // use the test class hostPort if specified
         try {
-            return (int) invocation.instance.metaClass.getProperty(invocation.instance, 'serverPort')
+            return (int) invocation.instance.metaClass.getProperty(invocation.instance, 'hostPort')
         } catch (ignored) {
-            throw new IllegalStateException('Test class requires serverPort to be injected')
+            println "no hostPort from invocation"
         }
+
+        try {
+            // use geb config setting or default 8080
+            Configuration gebConfig = new ConfigurationLoader().conf
+            return (int) gebConfig.rawConfig.getProperty('hostPort')
+        } catch (ignored) {
+            println "no hostPort in config"
+        }
+
+        println "using default hostPort 8080"
+        return 8080
     }
 
     @PackageScope
