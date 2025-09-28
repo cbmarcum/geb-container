@@ -3,24 +3,27 @@
 
 [versions]
 commons-math3 = "3.6.1"
-groovy = "4.0.14"
+# groovy-all = "3.0.24"
+groovy = "4.0.26"
 guava = "33.4.5-jre"
 junit = "4.13.2"
-geb-spock = "7.0"
+# spock-core = "2.2-groovy-3.0"
+geb-spock = "8.0-SNAPSHOT"
 testcontainers = "1.21.3"
-selenium = "4.34.0" # can't use 4.35.0 yet
+selenium = "4.33.0"
 remote-driver = "3.141.59"
 
 [libraries]
 commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math3" }
+# groovy-all = { module = "org.codehaus.groovy:groovy-all", version.ref = "groovy-all" }
 groovy = { module = "org.apache.groovy:groovy", version.ref = "groovy" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit = { module = "junit:junit", version.ref = "junit" }
-geb-spock = { module = "org.gebish:geb-spock", version.ref = "geb-spock" }
+# spock-core = { module = "org.spockframework:spock-core", version.ref = "spock-core" }
+geb-spock = { module = "org.apache.groovy.geb:geb-spock", version.ref = "geb-spock" }
 testcontainers-selenium = { module = "org.testcontainers:selenium", version.ref = "testcontainers" }
 selenium-chrome-driver = { module = "org.seleniumhq.selenium:selenium-chrome-driver", version.ref = "selenium" }
 selenium-firefox-driver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "selenium" }
 selenium-edge-driver = { module = "org.seleniumhq.selenium:selenium-edge-driver", version.ref = "selenium" }
-selenium-chromium-driver = { module = "org.seleniumhq.selenium:selenium-chromium-driver", version.ref = "selenium" }
 selenium-remote-driver = { module = "org.seleniumhq.selenium:selenium-remote-driver", version.ref = "remote-driver" }
 selenium-support = { module = "org.seleniumhq.selenium:selenium-support", version.ref = "selenium" }
