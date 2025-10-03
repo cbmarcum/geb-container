@@ -18,6 +18,7 @@
  */
 package grails.plugin.geb
 
+import geb.Page
 import geb.test.GebTestManager
 import grails.plugin.geb.support.ContainerSupport
 import grails.plugin.geb.support.ReportingSupport
@@ -30,7 +31,8 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 /**
- * A {@link geb.spock.GebSpec GebSpec} that leverages Testcontainers to run the browser inside a container.
+ * A {@link geb.spock.GebSpec GebSpec} that leverages Testcontainers
+ * to run the browser inside a container.
  *
  * <p>Prerequisites:
  * <ul>
@@ -55,5 +57,11 @@ abstract class ContainerGebSpec extends Specification implements ContainerSuppor
 
     static void setTestManager(GebTestManager testManager) {
         this.testManager = testManager
+    }
+
+    @Override
+    Page getPage() {
+        // Be explicit which trait to use (PageDelegate vs BrowserDelegate)
+        PageDelegate.super.page
     }
 }
