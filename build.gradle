@@ -89,7 +89,6 @@ dependencies {
     api libs.selenium.chrome.driver
     api libs.selenium.firefox.driver
     api libs.selenium.edge.driver
-    api libs.selenium.chromium.driver
     api libs.selenium.remote.driver
 
     implementation libs.selenium.support
@@ -98,7 +97,7 @@ dependencies {
     implementation "org.slf4j:slf4j-simple:2.0.17"
 
     // Added to be able to resolve the geb version from the BOM in the resolveVersions task
-    compileOnly 'org.gebish:geb-spock'
+    // compileOnly libs.geb.spock
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
 
@@ -171,6 +170,11 @@ drivers.eachWithIndex { driver, index ->
 
         if (index > 0) {
             dependsOn "${drivers[index-1]}Test"
+        }
+
+        // Make Geb tests more resilient in slow CI environments
+        if (project.hasProperty('gebAtCheckWaiting')) {
+            systemProperty('grails.geb.atCheckWaiting.enabled', 'true')
         }
 
     }

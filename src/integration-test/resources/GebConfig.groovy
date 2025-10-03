@@ -29,7 +29,6 @@ import geb.report.ReportingListener
 // Configuration for container-based Geb testing
 // This driver configuration will be used by WebDriverContainerHolder
 
-hostPort = 8090
 
 environments {
 
@@ -89,7 +88,13 @@ environments {
         }
     }
 }
-// Another proof that GebConfig.groovy is being utilized, next to GebConfigSpec
+// The `containerBrowser` property must match the configured
+// driver in order to start up a matching Selenium browser container.
+containerBrowser = 'firefox'
+
+hostPort = 8090
+
+// Another proof that GebConfig.groovy is being utilized, next to GebConfigSpec.
 reportingListener = new ReportingListener() {
     void onReport(Reporter reporter, ReportState reportState, List<File> reportFiles) {
         reportFiles.each {
