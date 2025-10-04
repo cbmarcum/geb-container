@@ -152,7 +152,7 @@ tasks.named("integrationTest") {
 
 }
 
-drivers.each { driver ->
+drivers.eachWithIndex { driver, index ->
 
     tasks.register("${driver}Test", Test) {
         group JavaBasePlugin.VERIFICATION_GROUP
@@ -171,6 +171,10 @@ drivers.each { driver ->
         // Make Geb tests more resilient in slow CI environments
         if (project.hasProperty('gebAtCheckWaiting')) {
             systemProperty('grails.geb.atCheckWaiting.enabled', 'true')
+        }
+
+        if (index > 0) {
+            mustRunAfter("${drivers[index-1]}Test")
         }
 
     }
