@@ -152,7 +152,7 @@ tasks.named("integrationTest") {
 
 }
 
-drivers.eachWithIndex { driver, index ->
+drivers.each { driver ->
 
     tasks.register("${driver}Test", Test) {
         group JavaBasePlugin.VERIFICATION_GROUP
@@ -167,10 +167,6 @@ drivers.eachWithIndex { driver, index ->
         systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
         systemProperty "geb.build.reportsDir", reporting.file("geb/$name")
         systemProperty "geb.env", driver
-
-        if (index > 0) {
-            dependsOn "${drivers[index-1]}Test"
-        }
 
         // Make Geb tests more resilient in slow CI environments
         if (project.hasProperty('gebAtCheckWaiting')) {
