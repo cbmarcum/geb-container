@@ -45,6 +45,7 @@ environments {
             // webdriver.remote.server before this closure is called
             new RemoteWebDriver(firefoxOptions)
         }
+        containerBrowser = 'firefox'
     }
 
     // run via “./gradlew chromeTest”
@@ -71,6 +72,7 @@ environments {
             // webdriver.remote.server before this closure is called
             new RemoteWebDriver(chromeOptions)
         }
+        containerBrowser = 'chrome'
     }
 
     // run via “./gradlew edgeTest”
@@ -86,11 +88,13 @@ environments {
             // webdriver.remote.server before this closure is called
             new RemoteWebDriver(edgeOptions)
         }
+        containerBrowser = 'edge'
     }
 }
+
 // The `containerBrowser` property must match the configured
 // driver in order to start up a matching Selenium browser container.
-containerBrowser = 'firefox'
+// containerBrowser = 'firefox' // see environments
 
 hostPort = 8090
 

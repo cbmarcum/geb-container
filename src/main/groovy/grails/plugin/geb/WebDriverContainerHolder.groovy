@@ -77,7 +77,7 @@ class WebDriverContainerHolder {
 
     private static final String DEFAULT_HOSTNAME_FROM_HOST = 'localhost'
     private static final String REMOTE_ADDRESS_PROPERTY = 'webdriver.remote.server'
-    private static final String DEFAULT_BROWSER = 'chrome'
+    private static final String DEFAULT_BROWSER = 'firefox'
 
     GrailsGebSettings settings
     GebTestManager testManager
@@ -156,8 +156,13 @@ class WebDriverContainerHolder {
         def customBrowser = gebConf.rawConfig.containerBrowser as String
 
         if (gebConfigExists) {
+            log.info "A Geb configuration exists..."
             validateDriverConf(gebConf)
             if (customBrowser) {
+                log.info(
+                        'A \'containerBrowser\' property was found in GebConfig. ' +
+                                "Using [$customBrowser] container image."
+                )
                 // Prepare for creating a container matching
                 // the GebConfig `containerBrowser` property.
                 dockerImageName = createDockerImageName(customBrowser)
