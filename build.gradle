@@ -14,9 +14,6 @@
 * to update this wrapper version
 * $ gradle wrapper --gradle-version 8.5 --distribution-type all
 *
-* publish manually at:
-* https://central.sonatype.com/publishing
-*
 * TODO: jreleaser
 *  https://jreleaser.org/guide/latest/examples/maven/maven-central.html#_portal_publisher_api
 */
@@ -37,7 +34,7 @@ plugins {
 
 }
 
-version = '0.6.1-SNAPSHOT'
+version = '0.6.1'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
