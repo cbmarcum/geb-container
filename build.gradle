@@ -1,5 +1,6 @@
 /* build with:
 * make sure to use java 21 and groovy 4.0
+*
 * ./gradlew publish (this pushed to nexus staging repo also)
 * nexus-plugin docs say to use:
 * ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
@@ -14,18 +15,12 @@
 * to update this wrapper version
 * $ gradle wrapper --gradle-version 8.5 --distribution-type all
 *
-* TODO: jreleaser
-*  https://jreleaser.org/guide/latest/examples/maven/maven-central.html#_portal_publisher_api
 */
 
 plugins {
 
-    // Apply the groovy Plugin to add support for Groovy.
     id 'groovy'
-
-    // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
-
     id 'maven-publish'
     id 'signing'
     // https://plugins.gradle.org/plugin/io.github.gradle-nexus.publish-plugin
@@ -108,12 +103,11 @@ java {
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
-// this did not allow compiling GebPort* tests that required Java 21.
-/*java {
+java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
-}*/
+}
 
 groovydoc {
     docTitle = "Geb Container API"
