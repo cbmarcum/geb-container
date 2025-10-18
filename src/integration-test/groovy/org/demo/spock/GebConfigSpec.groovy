@@ -19,19 +19,18 @@
 
 package org.demo.spock
 
+import org.demo.spock.pages.HomePage
 import org.openqa.selenium.remote.RemoteWebDriver
 
-import grails.plugin.geb.ContainerGebSpec
-import spock.lang.Stepwise
-
 /**
- * Test spec to verify that our custom GebConfig.groovy driver configuration
- * is being used instead of the default WebDriverContainerHolder configuration.
+ * Test spec to verify that our custom GebConfig.groovy configurations are
+ * being used instead of the default WebDriverContainerHolder configuration.
  */
-@Stepwise
-class GebDriverConfigSpec extends ContainerGebSpec {
+class GebConfigSpec extends ContainerGebSpecWithServer {
 
-    void 'the first test should use custom RemoteWebDriver from GebConfig.groovy'() {
+    def "should use custom RemoteWebDriver from GebConfig.groovy"() {
+        // reportInfo "the config file should use environment blocks with browser names"
+
         expect: 'the driver to be a RemoteWebDriver'
         driver instanceof RemoteWebDriver
 
@@ -45,31 +44,25 @@ class GebDriverConfigSpec extends ContainerGebSpec {
         capabilities.browserName == System.getProperty('geb.env')
 
         when: 'navigating to a page'
-        go('https://grails.apache.org/')
+        to(HomePage)
 
         then: 'the session should be active'
         driver.sessionId != null
     }
 
-    void 'the second test should also use custom RemoteWebDriver from GebConfig.groovy'() {
-        expect: 'the driver to be a RemoteWebDriver'
-        driver instanceof RemoteWebDriver
+    def "should use the hostPort in GebConfig.groovy"() {
+        // reportInfo "the config file should contain a 'hostPort = 8090' setting"
 
-        when: 'getting the capabilities of the driver'
-        def capabilities = ((RemoteWebDriver) driver).capabilities
+        when: "go to localhost"
+        to(HomePage)
 
-        then: 'our custom capability set in GebConfig is available'
-        capabilities.getCapability('grails:gebConfigUsed') == true
+        then: "the page title should be correct"
+        title == "Hello Geb"
 
-        and: 'the driver should use the browser from GebConfig.groovy'
-        capabilities.browserName == System.getProperty('geb.env')
-
-        when: 'navigating to a page'
-        go('https://grails.apache.org/')
-
-        then: 'the session should be active'
-        driver.sessionId != null
+        and: "the welcome header should be displayed"
+        $("h1").text() == "Welcome to the Geb/Spock Test"
     }
+
 
     def cleanup() {
         sleep(1000) // give the last video time to copy
