@@ -29,7 +29,7 @@ import org.demo.spock.pages.UploadPage
  */
 class ContainerFileDetectorDefaultSpec extends ContainerGebSpecWithServer {
 
-    void 'should be able to find and upload local files'() {
+    def "should be able to find and upload local files"() {
         given:
         def uploadPage = to(UploadPage)
 
@@ -38,9 +38,9 @@ class ContainerFileDetectorDefaultSpec extends ContainerGebSpecWithServer {
 
         and:
         uploadPage.submitBtn.click()
-        to(UploadSuccessPage) // added so we get to success page using just a JWebServer
 
         then:
         at(UploadSuccessPage)
+        currentUrl.contains(page.pageUrl + "?uploadedFile=upload-test.txt")
     }
 }
