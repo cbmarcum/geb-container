@@ -23,7 +23,7 @@ import org.demo.spock.pages.UploadPage
 
 class PageDelegateSpec extends ContainerGebSpecWithServer {
 
-    void 'should delegate to page object'() {
+    def "should delegate to page object"() {
         given:
         to(UploadPage)
 
