@@ -19,30 +19,32 @@
 
 package org.demo.spock
 
+import geb.report.CompositeReporter
+import geb.report.PageSourceReporter
+import geb.report.Reporter
 import org.demo.spock.pages.HomePage
+
 import grails.plugin.geb.ContainerGebConfiguration
-import spock.lang.Title
 
 /**
  * See https://grails.apache.org/docs/latest/guide/testing.html#functionalTesting and https://groovy.apache.org/geb/manual/current/
  * for more instructions on how to write functional tests with Grails and Geb.
  */
-@Title("host name configuration test")
-@ContainerGebConfiguration(hostName = 'testing.example.com')
-class HostNameConfigurationSpec extends ContainerGebSpecWithServer {
+@ContainerGebConfiguration(reporting = true)
+class RootPageSpec extends ContainerGebSpecWithServer {
 
-    def "should show the right server name when visiting home page"() {
-        when: "visiting the hpme page with a configured host name"
+    @Override
+    Reporter createReporter() {
+        // Override the default reporter to demonstrate how this can be customized
+        new CompositeReporter(new PageSourceReporter())
+    }
+
+    void 'should display the correct title on the home page'() {
+        when: 'visiting the home page'
         to(HomePage)
 
-        then: "the page text is correct"
-        $('p').text() == 'This page is served by a local JWebServer.'
-        and: "the emitted hostname is correct"
-        currentUrl == "http://testing.example.com:8090/"
+        then: 'the page title is correct'
+        report('root page report')
+        title == 'Hello Geb'
     }
-
-    def cleanup() {
-        sleep(1000) // give the last video time to copy
-    }
-
 }
