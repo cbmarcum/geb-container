@@ -19,46 +19,53 @@
 
 package org.demo.spock
 
-import grails.plugin.geb.ContainerGebSpec
-import com.sun.net.httpserver.HttpServer
-import com.sun.net.httpserver.SimpleFileServer
-import com.sun.net.httpserver.SimpleFileServer.OutputLevel
-import spock.lang.Narrative
+import org.demo.spock.pages.HomePage
+import org.openqa.selenium.remote.RemoteWebDriver
 
 /**
- * Test spec to verify that the correct port configuration is being used.
- * Some reference taken from:
- * groovy-geb/module/geb-core/src/test/groovy/geb/conf/ConfigurationLoaderSpec.groovy
+ * Test spec to verify that our custom GebConfig.groovy configurations are
+ * being used instead of the default WebDriverContainerHolder configuration.
  */
-@Narrative('''To verify the config file overrides default specified 
-in WebDriverContainerHolder.''')
-class GebPortConfigFromConfigSpec extends ContainerGebSpec {
+class GebConfigSpec extends ContainerGebSpecWithServer {
 
-    static TestFileServer server
+    def "should use custom RemoteWebDriver from GebConfig.groovy"() {
+        // reportInfo "the config file should use environment blocks with browser names"
 
-    def setupSpec() {
-        server = new TestFileServer()
+        expect: 'the driver to be a RemoteWebDriver'
+        driver instanceof RemoteWebDriver
+
+        when: 'getting the capabilities of the driver'
+        def capabilities = ((RemoteWebDriver) driver).capabilities
+
+        then: 'our custom capability set in GebConfig is available'
+        capabilities.getCapability('grails:gebConfigUsed') == true
+
+        and: 'the driver should use the browser from GebConfig.groovy'
+        capabilities.browserName == System.getProperty('geb.env')
+
+        when: 'navigating to a page'
+        to(HomePage)
+
+        then: 'the session should be active'
+        driver.sessionId != null
     }
 
-    // the config file should contain a 'hostPort = 8090' setting
     def "should use the hostPort in GebConfig.groovy"() {
-        given: "a server listening on port 8090"
-        server.start(8090)
+        // reportInfo "the config file should contain a 'hostPort = 8090' setting"
 
         when: "go to localhost"
-        go "/"
+        to(HomePage)
 
         then: "the page title should be correct"
         title == "Hello Geb"
 
         and: "the welcome header should be displayed"
         $("h1").text() == "Welcome to the Geb/Spock Test"
-
     }
+
 
     def cleanup() {
         sleep(1000) // give the last video time to copy
-        server.stop()
     }
 
 }
