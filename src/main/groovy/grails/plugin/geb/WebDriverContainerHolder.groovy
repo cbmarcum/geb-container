@@ -18,7 +18,7 @@
  */
 package grails.plugin.geb
 
-import org.openqa.selenium.edge.EdgeOptions
+
 import org.openqa.selenium.firefox.FirefoxOptions
 
 import java.time.Duration
@@ -39,7 +39,6 @@ import geb.spock.SpockGebTestManagerBuilder
 import geb.test.GebTestManager
 import geb.waiting.Wait
 import org.openqa.selenium.SessionNotCreatedException
-import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.remote.RemoteWebDriver
 import org.spockframework.runtime.extension.IMethodInvocation
 import org.spockframework.runtime.model.SpecInfo
@@ -110,7 +109,7 @@ class WebDriverContainerHolder {
      * Returns a host port to use for the container in this order:
      * Class field 'hostPort' if found in the invocation (Spec).
      * A 'hostPort' property in the GebConfig configuration.
-     * @param invocation
+     * @param methodInvocation
      * @return
      */
     private static int findServerPort(IMethodInvocation methodInvocation) {
@@ -122,7 +121,7 @@ class WebDriverContainerHolder {
             )
         } catch (ignored) {
             // Grails throws an IllegalStateException about their annotation here.  We do not.
-            println "no hostPort from methodInvocation"
+            log.info("no hostPort from methodInvocation")
         }
 
         try {
@@ -130,12 +129,53 @@ class WebDriverContainerHolder {
             Configuration gebConfig = new ConfigurationLoader().conf
             return (int) gebConfig.rawConfig.getProperty('hostPort')
         } catch (ignored) {
-            println "no hostPort in config"
+            log.info("no hostPort in config")
         }
 
-        println "using default hostPort 8080"
+        log.info("using default hostPort 8080")
         return 8080
     }
+
+    /**
+     * Returns a baseUrl from a setting if found in this order:
+     * A class field 'baseUrl' if found in the invocation (Spec).
+     * A 'baseUrl' property in the GebConfig configuration.
+     * Or an empty String if not found.
+     * @param methodInvocation
+     * @return
+     */
+    private static String findBaseUrl(IMethodInvocation methodInvocation) {
+        // use the test class baseUrl if specified
+        try {
+            String baseUrl =  methodInvocation.instance.metaClass.getProperty(
+                    methodInvocation.instance,
+                    'baseUrl'
+            )
+            if (baseUrl) {
+                log.info("using baseUrl: ${baseUrl} from method invocation.")
+                return baseUrl
+            }
+        } catch (ignored) {
+            log.info("no baseUrl from methodInvocation")
+        }
+
+        try {
+            // use geb config setting or default
+            Configuration gebConfig = new ConfigurationLoader().conf
+            String baseUrl = gebConfig.getProperty('baseUrl') ?: ""
+            if (baseUrl != "") {
+                log.info("using baseUrl: ${baseUrl} from configuration.")
+                return baseUrl
+            }
+        } catch (ignored) {
+            log.info("no baseUrl in config.")
+        }
+
+        log.info("no configured baseUrl found.")
+        return ""
+
+    }
+
 
     @PackageScope
     boolean reinitialize(IMethodInvocation methodInvocation) {
@@ -156,7 +196,7 @@ class WebDriverContainerHolder {
         def customBrowser = gebConf.rawConfig.containerBrowser as String
 
         if (gebConfigExists) {
-            log.info "A Geb configuration exists..."
+            log.info("A Geb configuration exists...")
             validateDriverConf(gebConf)
             if (customBrowser) {
                 log.info(
@@ -306,9 +346,17 @@ class WebDriverContainerHolder {
 
     void setupBrowserUrl(IMethodInvocation methodInvocation) {
         if (!browser) return
-        int hostPort = findServerPort(methodInvocation)
-        Testcontainers.exposeHostPorts(hostPort)
-        browser.baseUrl = "$containerConf.protocol://$containerConf.hostName:$hostPort"
+
+        // use a configured baseUrl if found, otherwise use localhost and hostPort
+        def baseUrl = findBaseUrl(methodInvocation)
+        if (baseUrl != "") {
+            browser.baseUrl = baseUrl
+        } else {
+            int hostPort = findServerPort(methodInvocation)
+            Testcontainers.exposeHostPorts(hostPort)
+            browser.baseUrl = "$containerConf.protocol://$containerConf.hostName:$hostPort"
+        }
+
     }
 
     private GebTestManager createTestManager() {

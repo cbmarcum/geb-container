@@ -28,7 +28,7 @@ import spock.lang.Narrative
  * groovy-geb/module/geb-core/src/test/groovy/geb/conf/ConfigurationLoaderSpec.groovy
  */
 @Narrative("To verify that class field overrides config file.")
-class GebPortConfigFromClassSpec extends ContainerGebSpec {
+class PortConfigFromClassSpec extends ContainerGebSpec {
 
     static TestFileServer server
 
@@ -38,7 +38,7 @@ class GebPortConfigFromClassSpec extends ContainerGebSpec {
         server = new TestFileServer()
     }
 
-    def "should use the configuration port"() {
+    def "should use the class field value"() {
         given: "a server listening on port 8000"
         server.start(8000)
 
