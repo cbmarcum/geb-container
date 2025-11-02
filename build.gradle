@@ -29,7 +29,7 @@ plugins {
 
 }
 
-version = '0.7.0-M1'
+version = '0.7.0-SNAPSHOT'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 
