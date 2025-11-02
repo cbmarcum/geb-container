@@ -207,10 +207,22 @@ dependencies {
 ```
 #### Host Port
 
-The Grails project uses an `@Integration` annotation on container tests that injects the port into the test class but we had to create a different approach.
+The Grails project uses an `@Integration` annotation on container tests that injects the port into the test class, but we had to create a different approach.
 
 There are three ways to set the localhost port to test.
 
-1. Do nothing and the default is `8080`
-2. Add a `hostPort = 8090` setting to GebConfig.groovy.  This setting will override the default whenever it it picked up on the test classpath.
+1. Do nothing and the default is `8080`.
+2. Add a `hostPort = 8090` setting to GebConfig.groovy.  This setting will override the default whenever it is picked up on the test classpath.
 3. Add a class level field to your container test class e.g. `int hostPort = 8000`.  This will override both the default and the GebConfig.groovy for this test class.  Note: this only works at the class level and not inside of a test method because it is only checked when the test class is invoked before any test setup or test is ran.
+
+#### Base URL
+
+The Grails project always used the `localhost` as the `baseUrl` setting for the container to use and any setting from the GebConfig was ignored.
+
+There are three ways to set a baseUrl to test.
+
+1. Do nothing and the default is `http://localhost:$hostPort`.
+2. Add a `baseUrl = "http://groovy.apache.org"` setting to GebConfig.groovy.  This setting will override the default whenever it is picked up on the test classpath.
+3. Add a class level field to your container test class e.g. `String baseUrl = "http://groovy.apache.org"`.  This will override both the default and the GebConfig.groovy for this test class.  Note: this only works at the class level and not inside of a test method because it is only checked when the test class is invoked before any test setup or test is ran.
+
+`hostPort` setting is ignored anytime a `baseUrl` is configured.
