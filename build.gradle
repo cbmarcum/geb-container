@@ -41,7 +41,7 @@ ext {
     // see https://github.com/SeleniumHQ/docker-selenium
     // for browsers per platform
     // drivers = ["firefox", "chrome", "edge"] // no safari container
-    drivers = ["firefox", "chrome"]
+    drivers = ["firefox"]
 }
 
 repositories {
@@ -120,6 +120,14 @@ groovydoc {
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+tasks.named("test") {
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+    }
+
+    systemProperty('grails.geb.recording.mode', 'RECORD_ALL') // also RECORD_FAILING
 }
 
 tasks.register('integrationTest', Test) {
