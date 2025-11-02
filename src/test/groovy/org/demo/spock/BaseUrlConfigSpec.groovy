@@ -23,40 +23,22 @@ import grails.plugin.geb.ContainerGebSpec
 import spock.lang.Narrative
 
 /**
- * Test spec to verify that the test server works.
+ * Test spec to verify that the correct baseUrl configuration is being used.
  */
-@Narrative("To verify the server works like it should")
-class TestFileServerSpec extends ContainerGebSpec {
+@Narrative("To verify that the config file is used.")
+class BaseUrlConfigSpec extends ContainerGebSpec {
 
-    static TestFileServer server
+    def "should use the baseUrl value"() {
 
-    def setupSpec() {
-        server = new TestFileServer()
-    }
-
-
-    // the config file should contain a 'hostPort = 8090' setting
-    def "should use the hostPort con GebConfig.groovy"() {
-        given: "a server listening on port 8090"
-
-        server.start(8090)
-
-        when: "go to localhost"
-        go "/"
+        when: "go to geb sub-page of groovy"
+        go "/geb"
 
         then: "the page title should be correct"
-        title == "Hello Geb"
-
-        and: "the welcome header should be displayed"
-        $("h1").text() == "Welcome to the Geb/Spock Test"
-
+        title == "Geb - Very Groovy Browser Automation"
     }
 
     def cleanup() {
         sleep(1000) // give the last video time to copy
-        server.stop(0)
     }
-
-
 
 }
