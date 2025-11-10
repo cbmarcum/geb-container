@@ -1,0 +1,73 @@
+# Generated with JReleaser 1.21.0 at 2025-11-05T18:29:54.767737-05:00
+project:
+  name: geb-container
+  version: 0.7.0-M2
+  description: A library for using Testcontainers with Apache Geb
+  longDescription: A library for using Testcontainers with Apache Geb originally derived from the Apache Grails Grails-Geb module.
+  authors:
+    - Carl Marcum
+  license: Apache-2.0
+  links:
+    homepage: https://github.com/cbmarcum/geb-container
+  languages:
+    java:
+      groupId: net.codebuilders
+      version: 17
+  inceptionYear: 2025
+
+release:
+  github:
+    owner: cbmarcum
+    overwrite: true
+    sign: false
+    # discussionCategoryName: 'Announcements'
+    changelog:
+      formatted: 'ALWAYS'
+      preset: 'conventional-commits'
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+      # skipMergeCommits: true
+      # using this instead
+      hide:
+        categories:
+          - 'merge'
+
+#assemble:
+#  javaArchive:
+#    geb-container:
+#      active: ALWAYS
+#      formats: [ ZIP ]
+#      fileSets:
+#        - input: '.'
+#          includes: [ 'LICENSE' ]
+#      mainJar:
+#        path: build/{{distributionName}}-{{projectVersion}}.jar
+
+#distributions:
+#  geb-container:
+#    artifacts:
+#      - path: build/libs/{{distributionName}}-{{projectVersion}}.zip
+
+signing:
+  active: NEVER
+  armored: true
+
+deploy:
+  maven:
+    mavenCentral:
+      release-deploy:
+        active: RELEASE
+        url: https://central.sonatype.com/api/v1/publisher
+        stagingRepositories:
+          - build/repo
+        sign: false
+    nexus2:
+      snapshot-deploy:
+        active: SNAPSHOT
+        snapshotUrl: https://central.sonatype.com/repository/maven-snapshots/
+        applyMavenCentralRules: true
+        snapshotSupported: true
+        closeRepository: true
+        releaseRepository: false
+        stagingRepositories:
+          - build/repo
