@@ -22,7 +22,7 @@ plugins {
 
 }
 
-version = '0.7.0-SNAPSHOT'
+version = '0.7.0-M2'
 group = 'net.codebuilders'
 archivesBaseName = 'geb-container'
 description = 'A library for using Testcontainers with Apache Geb.'
